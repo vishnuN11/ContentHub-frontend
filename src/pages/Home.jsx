@@ -208,7 +208,7 @@ const Home = () => {
   };
 
   const copyToClipboard = () => {
-    const url = `${window.location.origin}/article/${activeShareArticle._id}`;
+    const url = `${window.location.origin}`;
     navigator.clipboard.writeText(url);
     alert("Link copied to clipboard!");
   };
@@ -364,7 +364,7 @@ const Home = () => {
 
             <div className="grid grid-cols-4 gap-4 mb-8 text-center">
               {/* WhatsApp */}
-              <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(activeShareArticle.title + " " + window.location.origin + "/article/" + activeShareArticle._id)}`} target="_blank" rel="noreferrer" className="group">
+              <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(activeShareArticle.title + " " + window.location.origin)}`} target="_blank" rel="noreferrer" className="group">
                 <div className="bg-green-100 p-3 rounded-full text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all mx-auto w-12 h-12 flex items-center justify-center">
                   <i className="fab fa-whatsapp text-xl"></i>
                 </div>
@@ -372,7 +372,7 @@ const Home = () => {
               </a>
 
               {/* Facebook */}
-              <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.origin}/article/${activeShareArticle._id}`} target="_blank" rel="noreferrer" className="group">
+              <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.origin}`} target="_blank" rel="noreferrer" className="group">
                 <div className="bg-blue-100 p-3 rounded-full text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all mx-auto w-12 h-12 flex items-center justify-center">
                   <i className="fab fa-facebook-f text-xl"></i>
                 </div>
@@ -380,7 +380,7 @@ const Home = () => {
               </a>
 
               {/* Twitter/X */}
-              <a href={`https://twitter.com/intent/tweet?text=${activeShareArticle.title}&url=${window.location.origin}/article/${activeShareArticle._id}`} target="_blank" rel="noreferrer" className="group">
+              <a href={`https://twitter.com/intent/tweet?text=${activeShareArticle.title}&url=${window.location.origin}`} target="_blank" rel="noreferrer" className="group">
                 <div className="bg-gray-100 p-3 rounded-full text-black group-hover:bg-black group-hover:text-white transition-all mx-auto w-12 h-12 flex items-center justify-center">
                   <i className="fab fa-x-twitter text-xl"></i>
                 </div>
@@ -388,7 +388,7 @@ const Home = () => {
               </a>
 
               {/* Email */}
-              <a href={`mailto:?subject=${activeShareArticle.title}&body=Check this out: ${window.location.origin}/article/${activeShareArticle._id}`} className="group">
+              <a href={`mailto:?subject=${activeShareArticle.title}&body=Check this out: ${window.location.origin}`} className="group">
                 <div className="bg-red-100 p-3 rounded-full text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all mx-auto w-12 h-12 flex items-center justify-center">
                   <i className="fas fa-envelope text-xl"></i>
                 </div>
@@ -399,7 +399,7 @@ const Home = () => {
             <div className="bg-gray-50 p-2 rounded-lg border flex items-center justify-between gap-2">
               <input
                 readOnly
-                value={`${window.location.origin}/article/${activeShareArticle._id}`}
+                value={`${window.location.origin}`}
                 className="bg-transparent text-[10px] text-gray-500 truncate flex-1 outline-none"
               />
               <button
