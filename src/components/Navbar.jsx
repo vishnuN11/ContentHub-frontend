@@ -11,7 +11,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-dark text-white px-6 py-4 flex justify-between relative">
-      <Link className="font-bold" to="/">SysFacts</Link>
+      <Link className="font-bold" to="/">ContentHub</Link>
 
       {/* Desktop */}
       <div className="hidden md:flex gap-6 items-center">
