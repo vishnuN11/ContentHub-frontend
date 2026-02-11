@@ -3,6 +3,7 @@ import React from "react";
 import CreateArticle from "./CreateArticle";
 import { AllArticles } from "./AllArticles";
 import AdminArticle from "./AdminArticle";
+import AdminHealth from "./AdminHealth";
 export  function AdminPanel() {
   const [activeTab, setActiveTab] = useState("create");
 
@@ -40,7 +41,7 @@ export  function AdminPanel() {
             className={tabClass("users")}
             onClick={() => setActiveTab("users")}
           >
-            User Info
+           Admin Health
           </button>
         </div>
 
@@ -64,7 +65,7 @@ export  function AdminPanel() {
 
               {/* 🔽 PUT USER INFO / TABLE HERE */}
               <div className="border border-dashed rounded p-6 text-gray-400 text-center">
-                User Info Goes Here
+                <AdminHealth/>
               </div>
             </div>
           )}

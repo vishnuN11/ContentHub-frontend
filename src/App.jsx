@@ -14,6 +14,7 @@ import { AuthContext } from "./context/AuthContext";
 import { AdminPanel } from "./admin/AdminPanel";
 import StockDashboard from "./pages/StockDashboard";
 import StockSearch from "./pages/StockSearch";
+import HealthList from "./pages/HealthList";
 // dummy admin page for now
 
 
@@ -53,6 +54,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Articles />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/health"
+          element={
+            <ProtectedRoute>
+              <HealthList />
             </ProtectedRoute>
           }
         />

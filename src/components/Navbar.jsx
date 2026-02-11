@@ -16,7 +16,7 @@ export default function Navbar() {
       {/* Desktop */}
       <div className="hidden md:flex gap-6 items-center">
         <Link to="/article">Articles</Link>
-        {/* <Link to="/stock">Stock</Link> */}
+        <Link to="/health">Health & Well</Link>
         <Link to="/contact">Contact</Link>
 
         {isAdmin && (
@@ -45,7 +45,7 @@ export default function Navbar() {
       {open && (
         <div className="absolute top-16 left-0 w-full bg-dark flex flex-col items-center gap-4 py-6">
           <Link to="/article">Articles</Link>
-          {/* <Link to="/stock">Stock</Link> */}
+            <Link to="/health">Health & Well</Link>
           <Link to="/contact">Contact</Link>
 
           {isAdmin && (
