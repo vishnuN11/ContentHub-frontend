@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import SignIn from "./pages/SignIn";
@@ -22,7 +22,7 @@ export default function App() {
   const isLoggedIn = !!token;
 
   return (
-    <BrowserRouter>
+    <Router>
      <Navbar />
 
       <Routes>
@@ -87,6 +87,6 @@ export default function App() {
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
