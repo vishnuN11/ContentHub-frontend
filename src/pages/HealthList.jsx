@@ -20,7 +20,7 @@ export default function HealthList() {
     const fetchPosts = async () => {
         try {
             const res = await axios.get(
-                `http://localhost:5000/api/health?lang=${lang}`,
+                `${import.meta.env.VITE_API_BASE_URL}/health?lang=${lang}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
