@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import {HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import SignIn from "./pages/SignIn";
@@ -15,6 +15,7 @@ import { AdminPanel } from "./admin/AdminPanel";
 import StockDashboard from "./pages/StockDashboard";
 import StockSearch from "./pages/StockSearch";
 import HealthList from "./pages/HealthList";
+import HomePageNew from "./pages/HomePageNew";
 // dummy admin page for now
 
 
@@ -40,7 +41,7 @@ export default function App() {
         <Route
           path="/"
           element={
-           <Home />
+           <HomePageNew />
           }
         />
         {/* <Route
