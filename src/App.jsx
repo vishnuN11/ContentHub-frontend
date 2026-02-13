@@ -16,14 +16,17 @@ import StockDashboard from "./pages/StockDashboard";
 import StockSearch from "./pages/StockSearch";
 import HealthList from "./pages/HealthList";
 import HomePageNew from "./pages/HomePageNew";
+import FinanceList from "./pages/FinanceList";
+import TravelPage from "./pages/TravelPage";
 // dummy admin page for now
-
+import { LanguageProvider } from "./context/LanguageContext";
 
 export default function App() {
  const { token } = useContext(AuthContext);
   const isLoggedIn = !!token;
 
   return (
+    <LanguageProvider> 
     <Router>
      <Navbar />
 
@@ -55,6 +58,22 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Articles />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/finance"
+          element={
+            <ProtectedRoute>
+              <FinanceList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/travel"
+          element={
+            <ProtectedRoute>
+              <TravelPage />
             </ProtectedRoute>
           }
         />
@@ -98,5 +117,6 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
+     </LanguageProvider>
   );
 }

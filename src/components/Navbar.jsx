@@ -17,7 +17,8 @@ export default function Navbar() {
       <div className="hidden md:flex gap-6 items-center">
         <Link to="/article">Articles</Link>
         <Link to="/health">Health & Well</Link>
-        <Link to="/contact">Contact</Link>
+        <Link to="/finance">Financial Tip</Link>
+        {/* <Link to="/travel">Travel</Link> */}
 
         {isAdmin && (
           <Link className="text-yellow-400 font-semibold" to="/admin">
@@ -46,7 +47,8 @@ export default function Navbar() {
         <div className="absolute top-16 left-0 w-full bg-dark flex flex-col items-center gap-4 py-6">
           <Link to="/article">Articles</Link>
             <Link to="/health">Health & Well</Link>
-          <Link to="/contact">Contact</Link>
+          <Link to="/finance">Financial Tip</Link>
+          {/* <Link to="/travel">Travel</Link> */}
 
           {isAdmin && (
             <Link className="text-yellow-400 font-semibold" to="/admin">

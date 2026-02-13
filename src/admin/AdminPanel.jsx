@@ -4,6 +4,7 @@ import CreateArticle from "./CreateArticle";
 import { AllArticles } from "./AllArticles";
 import AdminArticle from "./AdminArticle";
 import AdminHealth from "./AdminHealth";
+import AdminFinance from "./AdminFinance";
 export  function AdminPanel() {
   const [activeTab, setActiveTab] = useState("create");
 
@@ -43,6 +44,12 @@ export  function AdminPanel() {
           >
            Admin Health
           </button>
+          <button
+            className={tabClass("finance")}
+            onClick={() => setActiveTab("finance")}
+          >
+           Admin Finance
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -66,6 +73,16 @@ export  function AdminPanel() {
               {/* 🔽 PUT USER INFO / TABLE HERE */}
               <div className="border border-dashed rounded p-6 text-gray-400 text-center">
                 <AdminHealth/>
+              </div>
+            </div>
+          )}
+          {activeTab === "finance" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Admin Finance</h2>
+
+              {/* 🔽 PUT USER INFO / TABLE HERE */}
+              <div className="border border-dashed rounded p-6 text-gray-400 text-center">
+                <AdminFinance/>
               </div>
             </div>
           )}
