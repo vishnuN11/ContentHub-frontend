@@ -18,7 +18,6 @@ import StockSearch from "./pages/StockSearch.jsx";       // ✅ .jsx added
 import HealthList from "./pages/HealthList.jsx";
 import HomePageNew from "./pages/HomePageNew.jsx";
 import FinanceList from "./pages/FinanceList.jsx";
-import TravelPage from "./pages/TravelPage.jsx";
 import { LanguageProvider } from "./context/LanguageContext.jsx"; // ✅ .jsx added
 
 export default function App() {
@@ -60,14 +59,7 @@ export default function App() {
             }
           />
           
-          <Route
-            path="/travel"
-            element={
-              <ProtectedRoute>
-                <TravelPage />
-              </ProtectedRoute>
-            }
-          />
+         
           
           <Route
             path="/health"
