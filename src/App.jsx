@@ -1,23 +1,23 @@
 import React, { useContext } from "react";
 import {BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
+import Navbar from "./components/Navbar.jsx";
+import SignIn from "./pages/SignIn.jsx";
+import SignUp from "./pages/SignUp.jsx";
 import Articles from "./pages/Articles";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import ProtectedRoute from "./components/ProtectedRoute";
-import AdminRoute from "./components/AdminRoute";
+import About from "./pages/About.jsx";
+import Contact from "./pages/Contact.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AdminRoute from "./components/AdminRoute.jsx";
 import Home from "./pages/Home";
-import { AuthContext } from "./context/AuthContext";
-import { AdminPanel } from "./admin/AdminPanel";
+import { AuthContext } from "./context/AuthContext.jsx";
+import { AdminPanel } from "./admin/AdminPanel.jsx";
 import StockDashboard from "./pages/StockDashboard";
 import StockSearch from "./pages/StockSearch";
-import HealthList from "./pages/HealthList";
-import HomePageNew from "./pages/HomePageNew";
-import FinanceList from "./pages/FinanceList";
-import TravelPage from "./pages/TravelPage";
+import HealthList from "./pages/HealthList.jsx";
+import HomePageNew from "./pages/HomePageNew.jsx";
+import FinanceList from "./pages/FinanceList.jsx";
+import TravelPage from "./pages/TravelPage.jsx";
 // dummy admin page for now
 import { LanguageProvider } from "./context/LanguageContext";
 
