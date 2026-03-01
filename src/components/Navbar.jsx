@@ -52,7 +52,7 @@ export default function Navbar() {
     { path: "/article", label: "Articles" },
     { path: "/health", label: "Health & Well" },
     { path: "/finance", label: "Financial Tip" },
-    // { path: "/travel", label: "Travel" },
+    { path: "/pdflist", label: "Ebook" },
   ];
 
   return (

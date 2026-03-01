@@ -5,6 +5,7 @@ import { AllArticles } from "./AllArticles";
 import AdminArticle from "./AdminArticle";
 import AdminHealth from "./AdminHealth";
 import AdminFinance from "./AdminFinance";
+import PDFUploader from "./PDFUploader";
 export  function AdminPanel() {
   const [activeTab, setActiveTab] = useState("create");
 
@@ -50,6 +51,12 @@ export  function AdminPanel() {
           >
            Admin Finance
           </button>
+          <button
+            className={tabClass("pdf")}
+            onClick={() => setActiveTab("pdf")}
+          >
+           Admin Pdf
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -83,6 +90,16 @@ export  function AdminPanel() {
               {/* 🔽 PUT USER INFO / TABLE HERE */}
               <div className="border border-dashed rounded p-6 text-gray-400 text-center">
                 <AdminFinance/>
+              </div>
+            </div>
+          )}
+          {activeTab === "pdf" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Admin Pdf</h2>
+
+              {/* 🔽 PUT USER INFO / TABLE HERE */}
+              <div className="border border-dashed rounded p-6 text-gray-400 text-center">
+                <PDFUploader/>
               </div>
             </div>
           )}
