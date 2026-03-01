@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { useSubscription } from '../context/SubscriptionContext';
 import SubscribeModal from './SubscribeModal';
 
+// ✅ API URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL
+
 export default function PdfListPage() {
   const [pdfs, setPdfs] = useState([]);
   const [filteredPdfs, setFilteredPdfs] = useState([]);
@@ -24,37 +27,29 @@ export default function PdfListPage() {
 
   const fetchPdfs = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/pdf', {
+      const response = await axios.get(`${API_URL}/api/pdf`, {
         params: { category, language }
       });
       
-      console.log('API Response:', response.data); // डीबगसाठी
+      console.log('API Response:', response.data);
       
-      // ✅ तुमच्या response structure नुसार डेटा सेट करा
-      // तुमच्या response मध्ये success: true, total: 1, pdfs: [...] आहे
+      // Handle different response formats
       if (response.data && response.data.success) {
-        // जर response मध्ये pdfs array असेल तर
         if (Array.isArray(response.data.pdfs)) {
           setPdfs(response.data.pdfs);
           setFilteredPdfs(response.data.pdfs);
-        } 
-        // जर response डायरेक्ट array असेल तर
-        else if (Array.isArray(response.data)) {
+        } else if (Array.isArray(response.data)) {
           setPdfs(response.data);
           setFilteredPdfs(response.data);
-        }
-        // जर response मध्ये data नावाचा array असेल तर
-        else if (response.data.data && Array.isArray(response.data.data)) {
+        } else if (response.data.data && Array.isArray(response.data.data)) {
           setPdfs(response.data.data);
           setFilteredPdfs(response.data.data);
-        }
-        else {
+        } else {
           console.error('Unexpected response format:', response.data);
           setPdfs([]);
           setFilteredPdfs([]);
         }
       } else {
-        // जर response डायरेक्ट array असेल तर
         if (Array.isArray(response.data)) {
           setPdfs(response.data);
           setFilteredPdfs(response.data);
@@ -72,7 +67,6 @@ export default function PdfListPage() {
   };
 
   const filterPdfs = () => {
-    // ✅ सुनिश्चित करा की pdfs array आहे
     if (!Array.isArray(pdfs)) {
       console.error('pdfs is not an array:', pdfs);
       return;
@@ -106,7 +100,6 @@ export default function PdfListPage() {
     requestDownload(pdf._id, pdf.title);
   };
 
-  // ✅ सुनिश्चित करा की pdfs array आहे categories काढताना
   const categories = Array.isArray(pdfs) 
     ? [...new Set(pdfs.map(pdf => pdf.category).filter(Boolean))]
     : [];

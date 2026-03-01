@@ -4,6 +4,9 @@ import { Document, Page, pdfjs } from "react-pdf";
 // import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 // import "react-pdf/dist/esm/Page/TextLayer.css";
 
+// ✅ API URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL;
+
 // PDF.js worker setup
 const workerUrl = process.env.NODE_ENV === 'production' 
   ? '/pdf.worker.min.mjs' // Production मध्ये local worker
@@ -20,6 +23,7 @@ export default function ViewerPage() {
   const [error, setError] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
   const navigate = useNavigate();
+
   const zoomIn = () => setScale(prev => Math.min(prev + 0.2, 2.5));
   const zoomOut = () => setScale(prev => Math.max(prev - 0.2, 0.5));
   const resetZoom = () => setScale(1.0);
@@ -35,20 +39,24 @@ export default function ViewerPage() {
       }
     }
   };
+
   const goBack = () => {
-    navigate('/pdflist'); // PDF list page वर जा
+    navigate('/pdflist');
   };
+
   return (
     <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col">
       {/* Header with Zoom Controls */}
       <div className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 px-6 py-3">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
-             <button
+            <button
               onClick={goBack}
               className="flex items-center gap-2 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-white text-sm transition"
               title="Back to PDF List"
-            >Back</button>
+            >
+              ← Back
+            </button>
             <h1 className="text-white font-semibold">📄 PDF Reader</h1>
             <span className="text-gray-400 text-sm">
               Page {pageNumber} of {numPages || '-'}
@@ -136,7 +144,7 @@ export default function ViewerPage() {
 
           <div className={`transition-all duration-300 ${loading ? 'hidden' : ''}`}>
             <Document
-              file={`http://localhost:5000/api/pdf/view/${id}`}
+              file={`${API_URL}/api/pdf/view/${id}`}
               onLoadSuccess={({ numPages }) => {
                 setNumPages(numPages);
                 setLoading(false);
