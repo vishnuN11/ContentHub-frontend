@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 // Context Providers
 import { AuthContext } from "./context/AuthContext.jsx";
 import { LanguageProvider } from "./context/LanguageContext.jsx";
-import { SubscriptionProvider } from './context/SubscriptionContext.jsx';
+import { SubscriptionProvider } from './context/SubscriptionContext.jsx'; // ✅ हे import करा
 
 // Components
 import Navbar from "./components/Navbar.jsx";
@@ -32,7 +32,7 @@ export default function App() {
   return (
     <AuthContext.Provider value={{ token }}>
       <LanguageProvider>
-        <SubscriptionProvider>
+        <SubscriptionProvider>  {/* ✅ PdfListPage याच्या आत असायला हवी */}
           <Router>
             <Navbar />
             <Routes>
@@ -60,7 +60,7 @@ export default function App() {
                 path="/pdflist" 
                 element={
                   <ProtectedRoute>
-                    <PdfListPage />
+                    <PdfListPage />  {/* ✅ हे SubscriptionProvider च्या आत आहे */}
                   </ProtectedRoute>
                 } 
               />
@@ -74,52 +74,7 @@ export default function App() {
                 } 
               />
               
-              <Route
-                path="/finance"
-                element={
-                  <ProtectedRoute>
-                    <FinanceList />
-                  </ProtectedRoute>
-                }
-              />
-              
-              <Route
-                path="/health"
-                element={
-                  <ProtectedRoute>
-                    <HealthList />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route
-                path="/about"
-                element={
-                  <ProtectedRoute>
-                    <About />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route
-                path="/contact"
-                element={
-                  <ProtectedRoute>
-                    <Contact />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route
-                path="/admin"
-                element={
-                  <AdminRoute>
-                    <AdminPanel />
-                  </AdminRoute>
-                }
-              />
-
-              <Route path="*" element={<Navigate to="/" />} />
+              {/* ... rest of your routes ... */}
             </Routes>
           </Router>
         </SubscriptionProvider>
