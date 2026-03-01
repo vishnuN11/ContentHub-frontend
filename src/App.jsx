@@ -20,7 +20,6 @@ import HomePageNew from "./pages/HomePageNew.jsx";
 import FinanceList from "./pages/FinanceList.jsx";
 import { LanguageProvider } from "./context/LanguageContext.jsx"; // ✅ .jsx added
 import PdfListPage from "./pages/PdfListPage.jsx";
-import UploadPage from "./pages/UploadPage.jsx";
 import ViewerPage from "./pages/ViewerPage.jsx";
 import { SubscriptionProvider } from './context/SubscriptionContext';
 export default function App() {
@@ -54,7 +53,6 @@ export default function App() {
             }
           />
           <Route path="/pdflist" element={<ProtectedRoute><PdfListPage /></ProtectedRoute>} />
-          <Route path="/upload" element={<ProtectedRoute><UploadPage /></ProtectedRoute>} />
           <Route path="/view/:id" element={<ProtectedRoute><ViewerPage /></ProtectedRoute>} />
           <Route
             path="/finance"
