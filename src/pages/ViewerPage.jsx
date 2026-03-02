@@ -6,11 +6,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 
 // ✅ API URL from environment variable with fallback
 const API_URL = import.meta.env.VITE_API_BASE_URL
-const workerUrl = process.env.NODE_ENV === 'production'
-  ? '/pdfjs/pdf.worker.min.js'  
-  : new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
-
-pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 export default function ViewerPage() {
   const { id } = useParams();
