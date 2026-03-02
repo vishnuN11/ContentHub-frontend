@@ -4,15 +4,12 @@ import { Document, Page, pdfjs } from "react-pdf";
 // import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 // import "react-pdf/dist/esm/Page/TextLayer.css";
 
-// ✅ API URL from environment variable
+// ✅ API URL from environment variable with fallback
 const API_URL = import.meta.env.VITE_API_BASE_URL
-
-// PDF.js worker setup
-const workerUrl = process.env.NODE_ENV === 'production' 
-  ? '/pdf.worker.min.mjs' // Production मध्ये local worker
-  : new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
-
-pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',  
+  import.meta.url
+).toString();
 
 export default function ViewerPage() {
   const { id } = useParams();
@@ -43,6 +40,11 @@ export default function ViewerPage() {
   const goBack = () => {
     navigate('/pdflist');
   };
+
+  // ✅ योग्य PDF URL (API_URL मध्ये /api आहे)
+  const pdfUrl = `${API_URL}/pdf/view/${id}`;
+  console.log('Loading PDF from:', pdfUrl);
+  console.log('PDF.js version:', pdfjs.version); // Debug
 
   return (
     <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col">
@@ -144,14 +146,14 @@ export default function ViewerPage() {
 
           <div className={`transition-all duration-300 ${loading ? 'hidden' : ''}`}>
             <Document
-              file={`${API_URL}/pdf/view/${id}`}
+              file={pdfUrl}
               onLoadSuccess={({ numPages }) => {
                 setNumPages(numPages);
                 setLoading(false);
               }}
               onLoadError={(err) => {
                 console.error("PDF load error:", err);
-                setError("PDF लोड करताना एरर आली");
+                setError("PDF लोड करताना एरर आली. कृपया पुन्हा प्रयत्न करा.");
                 setLoading(false);
               }}
               className="shadow-2xl rounded-lg overflow-hidden"
