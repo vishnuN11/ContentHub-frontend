@@ -18,7 +18,7 @@ export const SubscriptionProvider = ({ children }) => {
   const [selectedPdfForDownload, setSelectedPdfForDownload] = useState(null);
 
   // API URL
-  const API_URL = 'http://localhost:5000';
+  const API_URL = `${import.meta.env.VITE_API_BASE_URL}`
 
   // सबस्क्रिप्शन स्टेटस चेक करा
   useEffect(() => {
@@ -30,7 +30,7 @@ export const SubscriptionProvider = ({ children }) => {
       }
 
       try {
-        const response = await axios.get(`${API_URL}/api/mock-payment/status`, {
+        const response = await axios.get(`${API_URL}/mock-payment/status`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -76,7 +76,7 @@ export const SubscriptionProvider = ({ children }) => {
     if (canDownload()) {
       try {
         // ✅ API call through axios (better than window.open)
-        const response = await axios.get(`${API_URL}/api/pdf/download/${pdfId}`, {
+        const response = await axios.get(`${API_URL}/pdf/download/${pdfId}`, {
           headers: { Authorization: `Bearer ${token}` },
           responseType: 'blob' // Important for file download
         });
