@@ -5,7 +5,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 // import "react-pdf/dist/esm/Page/TextLayer.css";
 
 // ✅ API URL from environment variable
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_BASE_URL
 
 // PDF.js worker setup
 const workerUrl = process.env.NODE_ENV === 'production' 
@@ -144,7 +144,7 @@ export default function ViewerPage() {
 
           <div className={`transition-all duration-300 ${loading ? 'hidden' : ''}`}>
             <Document
-              file={`${API_URL}/api/pdf/view/${id}`}
+              file={`${API_URL}/pdf/view/${id}`}
               onLoadSuccess={({ numPages }) => {
                 setNumPages(numPages);
                 setLoading(false);
