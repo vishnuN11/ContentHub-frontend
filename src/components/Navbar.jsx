@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import React from "react";
 
 export default function Navbar() {
@@ -8,6 +8,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { token, isAdmin, logout } = useContext(AuthContext);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isLoggedIn = !!token;
 
@@ -47,6 +48,13 @@ export default function Navbar() {
       document.body.style.overflow = 'unset';
     };
   }, [open]);
+
+  // ✅ Logout handler
+ const handleLogout = () => {
+    logout(); // Context logout call
+    navigate("/signin", { replace: true }); // Navigate to signin
+    setOpen(false); // Close mobile menu
+  };
 
   const navItems = [
     { path: "/article", label: "Articles" },
@@ -107,7 +115,7 @@ export default function Navbar() {
               {/* Auth Buttons */}
               {isLoggedIn ? (
                 <button
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="ml-2 px-4 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-all duration-300"
                 >
                   Logout
@@ -143,7 +151,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Navigation Menu - FIXED */}
+        {/* Mobile Navigation Menu */}
         <div className={`md:hidden fixed inset-x-0 top-16 bg-white shadow-xl transition-all duration-300 ease-in-out z-40 ${
           open 
             ? 'opacity-100 visible translate-y-0' 
@@ -185,10 +193,7 @@ export default function Navbar() {
               {/* Mobile Auth Buttons */}
               {isLoggedIn ? (
                 <button
-                  onClick={() => {
-                    logout();
-                    setOpen(false);
-                  }}
+                  onClick={handleLogout}
                   className="px-4 py-3 rounded-xl text-base font-medium text-red-600 hover:bg-red-50 hover:pl-6 transition-all duration-300 text-left"
                 >
                   Logout

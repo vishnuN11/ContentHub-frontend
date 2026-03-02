@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Context Providers
-import { AuthContext } from "./context/AuthContext.jsx";
+import { AuthProvider, AuthContext } from "./context/AuthContext.jsx"; // ✅ AuthProvider import करा
 import { LanguageProvider } from "./context/LanguageContext.jsx";
-import { SubscriptionProvider } from './context/SubscriptionContext.jsx'; // ✅ हे import करा
+import { SubscriptionProvider } from './context/SubscriptionContext.jsx';
 
 // Components
 import Navbar from "./components/Navbar.jsx";
@@ -25,60 +25,115 @@ import FinanceList from "./pages/FinanceList.jsx";
 import PdfListPage from "./pages/PdfListPage.jsx";
 import ViewerPage from "./pages/ViewerPage.jsx";
 
-export default function App() {
+// ✅ हा एक Inner component आहे जो AuthContext वापरतो
+function AppContent() {
   const { token } = useContext(AuthContext);
   const isLoggedIn = !!token;
 
   return (
-    <AuthContext.Provider value={{ token }}>
+    <>
+      <Navbar />
+      <Routes>
+        <Route
+          path="/signup"
+          element={isLoggedIn ? <Navigate to="/" /> : <SignUp />}
+        />
+        <Route
+          path="/signin"
+          element={isLoggedIn ? <Navigate to="/" /> : <SignIn />}
+        />
+        
+        <Route path="/" element={<HomePageNew />} />
+        
+        <Route
+          path="/article"
+          element={
+            <ProtectedRoute>
+              <Articles />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route 
+          path="/pdflist" 
+          element={
+            <ProtectedRoute>
+              <PdfListPage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/view/:id" 
+          element={
+            <ProtectedRoute>
+              <ViewerPage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/finance" 
+          element={
+            <ProtectedRoute>
+              <FinanceList />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/health" 
+          element={
+            <ProtectedRoute>
+              <HealthList />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <About />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/contact"
+          element={
+            <ProtectedRoute>
+              <Contact />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminPanel />
+            </AdminRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </>
+  );
+}
+
+// ✅ Main App component with Providers
+export default function App() {
+  return (
+    <AuthProvider> {/* ✅ AuthProvider ने सगळं wrap करा */}
       <LanguageProvider>
-        <SubscriptionProvider>  {/* ✅ PdfListPage याच्या आत असायला हवी */}
+        <SubscriptionProvider>
           <Router>
-            <Navbar />
-            <Routes>
-              <Route
-                path="/signup"
-                element={isLoggedIn ? <Navigate to="/" /> : <SignUp />}
-              />
-              <Route
-                path="/signin"
-                element={isLoggedIn ? <Navigate to="/" /> : <SignIn />}
-              />
-              
-              <Route path="/" element={<HomePageNew />} />
-              
-              <Route
-                path="/article"
-                element={
-                  <ProtectedRoute>
-                    <Articles />
-                  </ProtectedRoute>
-                }
-              />
-              
-              <Route 
-                path="/pdflist" 
-                element={
-                  <ProtectedRoute>
-                    <PdfListPage />  {/* ✅ हे SubscriptionProvider च्या आत आहे */}
-                  </ProtectedRoute>
-                } 
-              />
-              
-              <Route 
-                path="/view/:id" 
-                element={
-                  <ProtectedRoute>
-                    <ViewerPage />
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* ... rest of your routes ... */}
-            </Routes>
+            <AppContent /> {/* ✅ Context वापरणारा component */}
           </Router>
         </SubscriptionProvider>
       </LanguageProvider>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 }
