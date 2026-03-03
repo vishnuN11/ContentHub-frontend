@@ -61,6 +61,7 @@ export default function Navbar() {
     { path: "/health", label: "Health & Well" },
     { path: "/finance", label: "Financial Tip" },
     { path: "/pdflist", label: "Ebook" },
+    { path: "/contact", label: "ContactUs" },
   ];
 
   return (
