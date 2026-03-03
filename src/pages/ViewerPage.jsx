@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 // import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 // import "react-pdf/dist/esm/Page/TextLayer.css";
 
 // ✅ API URL from environment variable with fallback
-const API_URL = import.meta.env.VITE_API_BASE_URL
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 export default function ViewerPage() {
@@ -16,11 +16,36 @@ export default function ViewerPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
+  const [containerWidth, setContainerWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
+
+  // Handle window resize for responsive scaling
+  useEffect(() => {
+    const handleResize = () => {
+      setContainerWidth(window.innerWidth);
+      // Auto-adjust scale for mobile
+      if (window.innerWidth < 768) {
+        setScale(0.8);
+      } else {
+        setScale(1.0);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Call initially
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const zoomIn = () => setScale(prev => Math.min(prev + 0.2, 2.5));
   const zoomOut = () => setScale(prev => Math.max(prev - 0.2, 0.5));
-  const resetZoom = () => setScale(1.0);
+  const resetZoom = () => {
+    if (containerWidth < 768) {
+      setScale(0.8);
+    } else {
+      setScale(1.0);
+    }
+  };
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -41,59 +66,71 @@ export default function ViewerPage() {
   // ✅ योग्य PDF URL (API_URL मध्ये /api आहे)
   const pdfUrl = `${API_URL}/pdf/view/${id}`;
   console.log('Loading PDF from:', pdfUrl);
-  console.log('PDF.js version:', pdfjs.version); // Debug
+  console.log('PDF.js version:', pdfjs.version);
+
+  // Calculate responsive page width
+  const getPageWidth = () => {
+    if (containerWidth < 640) return containerWidth - 32; // Mobile
+    if (containerWidth < 768) return 500; // Tablet
+    return 600; // Desktop
+  };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col">
-      {/* Header with Zoom Controls */}
-      <div className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 px-6 py-3">
+    <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden">
+      {/* Header - Fixed at top */}
+      <div className="bg-gray-800/80 backdrop-blur-sm border-b border-gray-700 px-3 sm:px-6 py-2 sm:py-3 flex-shrink-0">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={goBack}
-              className="flex items-center gap-2 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-white text-sm transition"
+              className="flex items-center justify-center sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white text-xs sm:text-sm transition"
               title="Back to PDF List"
             >
-              ← Back
+              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="hidden sm:inline ml-1">Back</span>
             </button>
-            <h1 className="text-white font-semibold">📄 PDF Reader</h1>
-            <span className="text-gray-400 text-sm">
-              Page {pageNumber} of {numPages || '-'}
+            <h1 className="text-white font-semibold text-sm sm:text-base truncate max-w-[120px] sm:max-w-none">
+              📄 PDF Reader
+            </h1>
+            <span className="text-gray-400 text-xs sm:text-sm hidden sm:inline">
+              {pageNumber}/{numPages || '-'}
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            {/* Zoom Controls */}
-            <div className="flex items-center gap-1 bg-gray-700/50 rounded-lg p-1">
+          <div className="flex items-center gap-1 sm:gap-2">
+            {/* Zoom Controls - Hidden on very small screens */}
+            <div className="hidden xs:flex items-center gap-0.5 sm:gap-1 bg-gray-700/50 rounded-lg p-0.5 sm:p-1">
               <button
                 onClick={zoomOut}
                 disabled={scale <= 0.5}
-                className="p-1.5 hover:bg-gray-600 rounded text-white disabled:opacity-30 transition"
+                className="p-1 sm:p-1.5 hover:bg-gray-600 rounded text-white disabled:opacity-30 transition"
                 title="Zoom Out"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                 </svg>
               </button>
-              <span className="text-white text-xs min-w-[45px] text-center">
+              <span className="text-white text-xs min-w-[35px] sm:min-w-[45px] text-center">
                 {Math.round(scale * 100)}%
               </span>
               <button
                 onClick={zoomIn}
                 disabled={scale >= 2.5}
-                className="p-1.5 hover:bg-gray-600 rounded text-white disabled:opacity-30 transition"
+                className="p-1 sm:p-1.5 hover:bg-gray-600 rounded text-white disabled:opacity-30 transition"
                 title="Zoom In"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
               </button>
               <button
                 onClick={resetZoom}
-                className="p-1.5 hover:bg-gray-600 rounded text-white transition ml-1"
+                className="p-1 sm:p-1.5 hover:bg-gray-600 rounded text-white transition ml-0.5 sm:ml-1"
                 title="Reset Zoom"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               </button>
@@ -102,10 +139,10 @@ export default function ViewerPage() {
             {/* Fullscreen Toggle */}
             <button
               onClick={toggleFullscreen}
-              className="p-1.5 hover:bg-gray-700 rounded-lg text-white transition"
+              className="p-1.5 sm:p-2 hover:bg-gray-700 rounded-lg text-white transition"
               title="Fullscreen"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {fullscreen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20H5v-4m14 0v4h-4M5 14V8h4m10 0v6h-4" />
                 ) : (
@@ -117,8 +154,8 @@ export default function ViewerPage() {
         </div>
       </div>
 
-      {/* PDF Viewer - Center Content */}
-      <div className="flex-1 overflow-auto p-4">
+      {/* PDF Viewer - Center Content with overflow handling */}
+      <div className="flex-1 overflow-auto p-2 sm:p-4 scrollbar-hide">
         <div className="min-h-full flex items-center justify-center">
           {loading && (
             <div className="text-center">
@@ -128,20 +165,20 @@ export default function ViewerPage() {
           )}
 
           {error && (
-            <div className="bg-red-900/50 backdrop-blur-sm border border-red-700 rounded-xl p-6 text-center max-w-md">
+            <div className="bg-red-900/50 backdrop-blur-sm border border-red-700 rounded-xl p-4 sm:p-6 text-center max-w-md mx-4">
               <div className="text-red-400 text-5xl mb-4">📄❌</div>
               <h3 className="text-white font-semibold text-lg mb-2">Failed to Load PDF</h3>
               <p className="text-gray-400 text-sm">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-4 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition"
+                className="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-2 rounded-lg transition text-sm sm:text-base"
               >
                 Try Again
               </button>
             </div>
           )}
 
-          <div className={`transition-all duration-300 ${loading ? 'hidden' : ''}`}>
+          <div className={`transition-all duration-300 ${loading ? 'hidden' : ''} w-full flex justify-center`}>
             <Document
               file={pdfUrl}
               onLoadSuccess={({ numPages }) => {
@@ -153,11 +190,12 @@ export default function ViewerPage() {
                 setError("PDF लोड करताना एरर आली. कृपया पुन्हा प्रयत्न करा.");
                 setLoading(false);
               }}
-              className="shadow-2xl rounded-lg overflow-hidden"
+              className="shadow-2xl rounded-lg overflow-hidden mx-auto"
             >
               <Page 
                 pageNumber={pageNumber} 
                 scale={scale}
+                width={getPageWidth()}
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
                 className="bg-white"
@@ -167,42 +205,42 @@ export default function ViewerPage() {
         </div>
       </div>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation - Fixed at bottom with proper spacing */}
       {numPages > 1 && (
-        <div className="bg-gray-800/50 backdrop-blur-sm border-t border-gray-700 px-6 py-3">
-          <div className="flex items-center justify-between max-w-2xl mx-auto">
+        <div className="bg-gray-800/80 backdrop-blur-sm border-t border-gray-700 px-2 sm:px-6 py-2 sm:py-3 flex-shrink-0">
+          <div className="flex items-center justify-between max-w-2xl mx-auto gap-2">
             <button
               onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
               disabled={pageNumber <= 1}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg text-white text-sm transition"
+              className="flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg text-white text-xs sm:text-sm transition flex-1 max-w-[100px]"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Previous
+              <span className="truncate">Prev</span>
             </button>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 flex-1 justify-center">
+              <span className="text-white text-xs sm:text-sm min-w-[40px] sm:min-w-[50px] text-center">
+                {pageNumber}/{numPages}
+              </span>
               <input
                 type="range"
                 min={1}
                 max={numPages}
                 value={pageNumber}
                 onChange={(e) => setPageNumber(parseInt(e.target.value))}
-                className="w-48 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                className="w-20 sm:w-32 md:w-48 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
               />
-              <span className="text-white text-sm min-w-[90px] text-center">
-                Page {pageNumber} of {numPages}
-              </span>
             </div>
 
             <button
               onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
               disabled={pageNumber >= numPages}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg text-white text-sm transition"
+              className="flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg text-white text-xs sm:text-sm transition flex-1 max-w-[100px]"
             >
-              Next
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="truncate">Next</span>
+              <svg className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
